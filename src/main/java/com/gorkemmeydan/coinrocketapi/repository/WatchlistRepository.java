@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WatchlistRepository extends JpaRepository<WatchList, Long> {
+public interface WatchlistRepository extends CustomRepository<WatchList, Long> {
 }

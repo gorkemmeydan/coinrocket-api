@@ -14,5 +14,8 @@ public class WatchlistDto {
     private Long id;
 
     @NotNull
+    private String email;
+
+    @NotNull
     private String coinName;
 }

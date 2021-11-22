@@ -1,5 +1,6 @@
 package com.gorkemmeydan.coinrocketapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +14,6 @@ import java.util.Date;
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"id"})
-@ToString
 public class CoinTransaction implements Serializable {
 
     @Id
@@ -32,6 +32,7 @@ public class CoinTransaction implements Serializable {
     private Date transactionDate;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name= "portfolio_coin_transaction_id")
     private Portfolio portfolio;
 }

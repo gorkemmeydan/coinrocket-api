@@ -1,5 +1,6 @@
 package com.gorkemmeydan.coinrocketapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +13,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"id"})
-@ToString
 public class WatchList implements Serializable {
 
     @Id
@@ -24,7 +24,8 @@ public class WatchList implements Serializable {
     @Column(name = "coin_name", nullable = false)
     private String coinName;
 
-    @ManyToOne
+    @ManyToOne()
+    @JsonBackReference
     @JoinColumn(name = "user_watchlist_id")
     private AppUser appUser;
 }

@@ -2,6 +2,7 @@ package com.gorkemmeydan.coinrocketapi.service.impl;
 
 import com.gorkemmeydan.coinrocketapi.dto.AppUserDto;
 import com.gorkemmeydan.coinrocketapi.entity.AppUser;
+import com.gorkemmeydan.coinrocketapi.exception.UserAlreadyExistsException;
 import com.gorkemmeydan.coinrocketapi.repository.AppUserRepository;
 import com.gorkemmeydan.coinrocketapi.service.AppUserService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,13 @@ public class AppUserServiceImpl implements AppUserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public AppUser saveUser(AppUserDto appUserDto) {
-        log.info("Saving new user {} to the database", appUserDto.getFullName());
+    public AppUser saveUser(AppUserDto appUserDto) throws UserAlreadyExistsException {
+
+        if(checkIfUserExists(appUserDto.getEmail())){
+            throw new UserAlreadyExistsException("User already exists for this email");
+        }
+
+        log.info("Saving new user {} to the database", appUserDto.getEmail());
 
         AppUser appUser = new AppUser();
         appUser.setEmail(appUserDto.getEmail());
@@ -36,8 +42,14 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUserDto> getAllUsers() {
-        return null;
+    public boolean checkIfUserExists(String email) {
+        return appUserRepository.findByEmail(email) != null;
+    }
+
+
+    @Override
+    public List<AppUser> getAllUsers() {
+        return appUserRepository.findAll();
     }
 
     @Override

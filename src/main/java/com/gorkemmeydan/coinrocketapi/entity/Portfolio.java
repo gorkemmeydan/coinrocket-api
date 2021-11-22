@@ -1,9 +1,11 @@
 package com.gorkemmeydan.coinrocketapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,7 +15,6 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"id"})
-@ToString
 public class Portfolio implements Serializable {
 
     @Id
@@ -26,10 +27,11 @@ public class Portfolio implements Serializable {
     private String coinName;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_portfolio_id")
     private AppUser appUser;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.REMOVE,CascadeType.REFRESH}, orphanRemoval = true)
     @JoinColumn(name= "portfolio_coin_transaction_id")
-    private List<CoinTransaction> coinTransactions;
+    private List<CoinTransaction> coinTransactions = new ArrayList<>();
 }
