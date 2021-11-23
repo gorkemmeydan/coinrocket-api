@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -66,6 +67,19 @@ public class WatchlistServiceImpl implements WatchlistService {
         to_be_removed.ifPresent(watchlistRepository::delete);
 
         return appUser;
+    }
+
+    @Override
+    public List<WatchList> getWatchlistOfUser(String email) throws UserDoesNotExistsException {
+        // find the user with given email
+        log.info("Getting watchlist for user {}", email);
+
+        if (!checkIfUserExists(email)) throw new UserDoesNotExistsException("User with given email does not exist");
+
+
+        // get the app user from db
+        AppUser appUser = appUserRepository.findByEmail(email);
+        return appUser.getWatchList();
     }
 
     @Override
