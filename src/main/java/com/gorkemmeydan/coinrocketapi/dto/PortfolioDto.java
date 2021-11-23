@@ -13,6 +13,8 @@ public class PortfolioDto {
 
     private Long id;
 
+    private String email;
+
     @NotNull
     private String coinName;
 }
