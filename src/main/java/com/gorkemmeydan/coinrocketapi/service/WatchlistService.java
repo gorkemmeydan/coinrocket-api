@@ -1,6 +1,5 @@
 package com.gorkemmeydan.coinrocketapi.service;
 
-import com.gorkemmeydan.coinrocketapi.dto.AppUserDto;
 import com.gorkemmeydan.coinrocketapi.dto.WatchlistDto;
 import com.gorkemmeydan.coinrocketapi.entity.AppUser;
 import com.gorkemmeydan.coinrocketapi.entity.WatchList;

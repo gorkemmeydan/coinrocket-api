@@ -13,6 +13,11 @@ import java.util.Date;
 public class CoinTransactionDto {
     private Long id;
 
+    private String email;
+
+    @NotNull
+    private String coinName;
+
     @NotNull
     private boolean isPositive;
 
@@ -20,5 +25,5 @@ public class CoinTransactionDto {
     private Double quantity;
 
     @NotNull
-    private Date transactionDate;
+    private long unixTransactionDate;
 }

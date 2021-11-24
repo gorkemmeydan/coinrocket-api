@@ -22,6 +22,9 @@ public class CoinTransaction implements Serializable {
     @Column(name = "id", updatable = false)
     private Long id;
 
+    @Column(name = "coin_name", nullable = false)
+    private String coinName;
+
     @Column(name = "is_positive", nullable = false)
     private boolean isPositive;
 
