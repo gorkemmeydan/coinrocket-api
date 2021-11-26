@@ -3,8 +3,6 @@ package com.gorkemmeydan.coinrocketapi.dto;
 import com.sun.istack.NotNull;
 import lombok.*;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,4 +24,12 @@ public class CoinTransactionDto {
 
     @NotNull
     private long unixTransactionDate;
+
+    public boolean getisPositive() {
+        return isPositive;
+    }
+
+    public void setisPositive(boolean isPositive) {
+        this.isPositive = isPositive;
+    }
 }

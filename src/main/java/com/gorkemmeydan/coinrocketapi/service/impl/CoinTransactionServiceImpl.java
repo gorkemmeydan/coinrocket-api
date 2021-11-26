@@ -4,7 +4,6 @@ import com.gorkemmeydan.coinrocketapi.dto.CoinTransactionDto;
 import com.gorkemmeydan.coinrocketapi.entity.AppUser;
 import com.gorkemmeydan.coinrocketapi.entity.CoinTransaction;
 import com.gorkemmeydan.coinrocketapi.entity.Portfolio;
-import com.gorkemmeydan.coinrocketapi.exception.CoinAlreadyExistsInPortfolioException;
 import com.gorkemmeydan.coinrocketapi.exception.CoinDoesNotExistsInPortfolioException;
 import com.gorkemmeydan.coinrocketapi.exception.TransactionIdIsMissing;
 import com.gorkemmeydan.coinrocketapi.exception.UserDoesNotExistsException;
@@ -14,7 +13,6 @@ import com.gorkemmeydan.coinrocketapi.repository.PortfolioRepository;
 import com.gorkemmeydan.coinrocketapi.service.CoinTransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -55,7 +53,7 @@ public class CoinTransactionServiceImpl implements CoinTransactionService {
         Date transactionDate = new java.util.Date(coinTransactionDto.getUnixTransactionDate()*1000L);
         coinTransaction.setTransactionDate(transactionDate);
         coinTransaction.setQuantity(coinTransactionDto.getQuantity());
-        coinTransaction.setPositive(coinTransactionDto.isPositive());
+        coinTransaction.setPositive(coinTransactionDto.getisPositive());
         coinTransaction.setPortfolio(portfolio.get());
         coinTransactionRepository.save(coinTransaction);
 

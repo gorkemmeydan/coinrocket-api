@@ -1,8 +1,16 @@
 package com.gorkemmeydan.coinrocketapi.service.impl;
 
 import com.gorkemmeydan.coinrocketapi.dto.AppUserDto;
+import com.gorkemmeydan.coinrocketapi.dto.UserHoldingsDto;
 import com.gorkemmeydan.coinrocketapi.entity.AppUser;
+import com.gorkemmeydan.coinrocketapi.entity.CoinTransaction;
+import com.gorkemmeydan.coinrocketapi.entity.Portfolio;
+import com.gorkemmeydan.coinrocketapi.entity.WatchList;
 import com.gorkemmeydan.coinrocketapi.exception.UserAlreadyExistsException;
+import com.gorkemmeydan.coinrocketapi.exception.UserDoesNotExistsException;
+import com.gorkemmeydan.coinrocketapi.model.CoinTransactionItemPojo;
+import com.gorkemmeydan.coinrocketapi.model.PortfolioItemPojo;
+import com.gorkemmeydan.coinrocketapi.model.WatchListItemPojo;
 import com.gorkemmeydan.coinrocketapi.repository.AppUserRepository;
 import com.gorkemmeydan.coinrocketapi.service.AppUserService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +50,76 @@ public class AppUserServiceImpl implements AppUserService {
         appUser.setPassword(passwordEncoder.encode(appUserDto.getPassword()));
         appUser.setCreatedAt(new Date());
         return appUserRepository.save(appUser);
+    }
+
+    @Override
+    public UserHoldingsDto getUserHoldings(AppUserDto appUserDto) throws UserDoesNotExistsException {
+        if (!checkIfUserExists(appUserDto.getEmail())) {
+            throw new UserDoesNotExistsException("User with given email does not exists");
+        }
+
+        log.info("Returning user holdings for {}", appUserDto.getEmail());
+
+        // get user from database to fill information
+        AppUser appUser = appUserRepository.findByEmail(appUserDto.getEmail());
+
+        UserHoldingsDto userHoldingsDto = new UserHoldingsDto();
+        userHoldingsDto.setId(appUser.getId());
+        userHoldingsDto.setEmail(appUser.getEmail());
+
+        // add watchlist items
+        for (WatchList item : appUser.getWatchList()) {
+            WatchListItemPojo watchListItemPojo = new WatchListItemPojo();
+            watchListItemPojo.setId(item.getId());
+            watchListItemPojo.setCoinName(item.getCoinName());
+            userHoldingsDto.getWatchList().add(watchListItemPojo);
+        }
+
+        // add portfolio items
+
+        for (Portfolio item: appUser.getPortfolio()) {
+            PortfolioItemPojo portfolioItemPojo = new PortfolioItemPojo();
+            portfolioItemPojo.setId(item.getId());
+            portfolioItemPojo.setCoinName(item.getCoinName());
+
+            // sort the transaction list by date
+            List<CoinTransaction> transactionsByAscendingDate = item.getCoinTransactions();
+            transactionsByAscendingDate.sort(Comparator.comparing(CoinTransaction::getTransactionDate));
+
+            // iterate over sorted transactions list to add to transactions and 7 days holdings
+            for (CoinTransaction coinTransaction: transactionsByAscendingDate) {
+                // add transaction item
+                CoinTransactionItemPojo coinTransactionItemPojo = new CoinTransactionItemPojo();
+                coinTransactionItemPojo.setId(coinTransaction.getId());
+                coinTransactionItemPojo.setCoinName(coinTransaction.getCoinName());
+                coinTransactionItemPojo.setTransactionDate(coinTransaction.getTransactionDate());
+                coinTransactionItemPojo.setPositive(coinTransaction.isPositive());
+                coinTransactionItemPojo.setQuantity(coinTransaction.getQuantity());
+                portfolioItemPojo.getCoinTransactions().add(coinTransactionItemPojo);
+
+                // add to 7 days transaction history array if according to date
+                // firstly get the current local date
+                LocalDate tomorrow = LocalDate.now().plusDays(1);
+                // convert the transaction time to local date
+                LocalDate transactionLocalDate = coinTransaction.getTransactionDate().
+                    toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                double addedValue = coinTransaction.getQuantity();
+                if (!coinTransaction.isPositive()) addedValue = -1 * addedValue;
+
+                // update the week by 7 days
+                for (int i=6; i >= 0 ; i--) {
+                   if(transactionLocalDate.isBefore(tomorrow.minusDays(6-i))) {
+                       portfolioItemPojo.addLastWeeksHoldingsByIndex(i, addedValue);
+                   }
+                }
+
+            }
+            // add new portfolio item to portfolio list
+            userHoldingsDto.getPortfolio().add(portfolioItemPojo);
+        }
+
+        return userHoldingsDto;
     }
 
     @Override
