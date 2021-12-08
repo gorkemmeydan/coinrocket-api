@@ -1,4 +1,4 @@
-package com.gorkemmeydan.coinrocketapi.auth;
+package com.gorkemmeydan.coinrocketapi.security;
 
 import com.gorkemmeydan.coinrocketapi.entity.AppUser;
 import com.gorkemmeydan.coinrocketapi.repository.AppUserRepository;

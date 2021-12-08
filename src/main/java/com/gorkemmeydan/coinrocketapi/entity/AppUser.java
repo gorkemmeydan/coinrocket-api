@@ -33,6 +33,7 @@ public class AppUser {
     private String email;
 
     @Column(name="password", nullable = false)
+    @ToString.Exclude
     private String password;
 
     @Column(name = "created_at", nullable = false)
