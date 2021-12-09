@@ -9,3 +9,9 @@ services:
       - 5433:5432
     environment:
       POSTGRES_PASSWORD: devPass
+
+  redis:
+    image: redis
+    command: redis-server --requirepass devPass
+    ports:
+      - 6379:6379
