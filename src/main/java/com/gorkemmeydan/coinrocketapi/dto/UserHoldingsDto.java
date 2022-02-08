@@ -1,7 +1,7 @@
 package com.gorkemmeydan.coinrocketapi.dto;
 
-import com.gorkemmeydan.coinrocketapi.model.PortfolioItemPojo;
-import com.gorkemmeydan.coinrocketapi.model.WatchListItemPojo;
+import com.gorkemmeydan.coinrocketapi.pojo.PortfolioItemPojo;
+import com.gorkemmeydan.coinrocketapi.pojo.WatchListItemPojo;
 import lombok.*;
 
 import java.util.ArrayList;

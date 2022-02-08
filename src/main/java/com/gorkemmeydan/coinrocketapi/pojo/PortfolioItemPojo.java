@@ -1,4 +1,4 @@
-package com.gorkemmeydan.coinrocketapi.model;
+package com.gorkemmeydan.coinrocketapi.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
