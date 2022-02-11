@@ -25,6 +25,18 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests().antMatchers("/api/signup**").permitAll();
+
+        http.authorizeRequests().antMatchers(
+                "/v3/api-docs",
+                "/v3/api-docs/**",
+                "/configuration/**",
+                "/swagger-resources/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+                "/webjars/**",
+                "/api-docs/**").permitAll();
+        http.authorizeRequests().antMatchers( "/hystrix**","/actuator**", "/actuator/**").permitAll();
+
         http.authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll();
 
         http
