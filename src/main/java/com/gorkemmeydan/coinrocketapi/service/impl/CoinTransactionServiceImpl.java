@@ -5,11 +5,10 @@ import com.gorkemmeydan.coinrocketapi.entity.AppUser;
 import com.gorkemmeydan.coinrocketapi.entity.CoinTransaction;
 import com.gorkemmeydan.coinrocketapi.entity.Portfolio;
 import com.gorkemmeydan.coinrocketapi.exception.CoinDoesNotExistsInPortfolioException;
-import com.gorkemmeydan.coinrocketapi.exception.TransactionIdIsMissing;
+import com.gorkemmeydan.coinrocketapi.exception.TransactionIdIsMissingException;
 import com.gorkemmeydan.coinrocketapi.exception.UserDoesNotExistsException;
 import com.gorkemmeydan.coinrocketapi.repository.AppUserRepository;
 import com.gorkemmeydan.coinrocketapi.repository.CoinTransactionRepository;
-import com.gorkemmeydan.coinrocketapi.repository.PortfolioRepository;
 import com.gorkemmeydan.coinrocketapi.service.CoinTransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +25,10 @@ import java.util.Optional;
 @Slf4j
 public class CoinTransactionServiceImpl implements CoinTransactionService {
     private final AppUserRepository appUserRepository;
-    private final PortfolioRepository portfolioRepository;
     private final CoinTransactionRepository coinTransactionRepository;
 
     @Override
-    public AppUser saveTransactionToCoin(CoinTransactionDto coinTransactionDto) throws UserDoesNotExistsException, CoinDoesNotExistsInPortfolioException {
+    public void saveTransactionToCoin(CoinTransactionDto coinTransactionDto) {
         // find the user with given email
         if (!checkIfUserExists(coinTransactionDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
 
@@ -59,11 +57,10 @@ public class CoinTransactionServiceImpl implements CoinTransactionService {
 
         // refresh user to have latest watchlist
         appUserRepository.refresh(appUser);
-        return appUser;
     }
 
     @Override
-    public AppUser deleteTransactionFromCoin(CoinTransactionDto coinTransactionDto) throws UserDoesNotExistsException, CoinDoesNotExistsInPortfolioException, TransactionIdIsMissing {
+    public void deleteTransactionFromCoin(CoinTransactionDto coinTransactionDto) {
         // find the user with given email
         if (!checkIfUserExists(coinTransactionDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
 
@@ -74,17 +71,15 @@ public class CoinTransactionServiceImpl implements CoinTransactionService {
         if (!checkIfCoinExistsInPortfolio(appUser, coinTransactionDto.getCoinName())) throw new CoinDoesNotExistsInPortfolioException("Coin does not exist in portfolio for given user");
 
         // we should delete the transaction with id, since there might me duplicate transactions that are correct
-        if (coinTransactionDto.getId() == null) throw new TransactionIdIsMissing("Transaction ID should be given for delete operation");
+        if (coinTransactionDto.getId() == null) throw new TransactionIdIsMissingException("Transaction ID should be given for delete operation");
 
         log.info("removing transaction {} with id {} from user {} ", coinTransactionDto.getCoinName(), coinTransactionDto.getId(), coinTransactionDto.getEmail());
 
         coinTransactionRepository.deleteById(coinTransactionDto.getId());
-
-        return appUser;
     }
 
     @Override
-    public List<CoinTransaction> getTransactionHistoryOfUserForGivenCoin(CoinTransactionDto coinTransactionDto) throws UserDoesNotExistsException, CoinDoesNotExistsInPortfolioException {
+    public List<CoinTransaction> getTransactionHistoryOfUserForGivenCoin(CoinTransactionDto coinTransactionDto) {
 
         if (!checkIfUserExists(coinTransactionDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
 

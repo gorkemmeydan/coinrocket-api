@@ -3,18 +3,15 @@ package com.gorkemmeydan.coinrocketapi.service;
 import com.gorkemmeydan.coinrocketapi.dto.WatchlistDto;
 import com.gorkemmeydan.coinrocketapi.entity.AppUser;
 import com.gorkemmeydan.coinrocketapi.entity.WatchList;
-import com.gorkemmeydan.coinrocketapi.exception.CoinAlreadyExistsInWatchlistException;
-import com.gorkemmeydan.coinrocketapi.exception.CoinDoesNotExistsInUserException;
-import com.gorkemmeydan.coinrocketapi.exception.UserDoesNotExistsException;
 
 import java.util.List;
 
 public interface WatchlistService {
-    AppUser saveToWatchlist(WatchlistDto watchlistDto) throws UserDoesNotExistsException, CoinAlreadyExistsInWatchlistException;
+    void saveToWatchlist(WatchlistDto watchlistDto);
 
-    AppUser deleteFromWatchlist(WatchlistDto watchlistDto) throws UserDoesNotExistsException, CoinDoesNotExistsInUserException;
+    void deleteFromWatchlist(WatchlistDto watchlistDto);
 
-    List<WatchList> getWatchlistOfUser(String email) throws UserDoesNotExistsException;
+    List<WatchList> getWatchlistOfUser(String email);
 
     boolean checkIfUserExists(String email);
 

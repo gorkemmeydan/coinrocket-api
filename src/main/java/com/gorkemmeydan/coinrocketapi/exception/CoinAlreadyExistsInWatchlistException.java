@@ -1,6 +1,6 @@
 package com.gorkemmeydan.coinrocketapi.exception;
 
-public class CoinAlreadyExistsInWatchlistException extends Exception {
+public class CoinAlreadyExistsInWatchlistException extends RuntimeException {
     public CoinAlreadyExistsInWatchlistException() {
         super();
     }

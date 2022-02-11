@@ -1,6 +1,6 @@
 package com.gorkemmeydan.coinrocketapi.exception;
 
-public class CoinDoesNotExistsInPortfolioException extends Exception {
+public class CoinDoesNotExistsInPortfolioException extends RuntimeException {
     public CoinDoesNotExistsInPortfolioException() {
         super();
     }

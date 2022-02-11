@@ -36,7 +36,7 @@ public class AppUserServiceImpl implements AppUserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public AppUser saveUser(AppUserDto appUserDto) throws UserAlreadyExistsException {
+    public void saveUser(AppUserDto appUserDto){
 
         if(checkIfUserExists(appUserDto.getEmail())){
             throw new UserAlreadyExistsException("User already exists for this email");
@@ -49,11 +49,11 @@ public class AppUserServiceImpl implements AppUserService {
         appUser.setFullName(appUserDto.getFullName());
         appUser.setPassword(passwordEncoder.encode(appUserDto.getPassword()));
         appUser.setCreatedAt(new Date());
-        return appUserRepository.save(appUser);
+        appUserRepository.save(appUser);
     }
 
     @Override
-    public UserHoldingsDto getUserHoldings(AppUserDto appUserDto) throws UserDoesNotExistsException {
+    public UserHoldingsDto getUserHoldings(AppUserDto appUserDto) {
         if (!checkIfUserExists(appUserDto.getEmail())) {
             throw new UserDoesNotExistsException("User with given email does not exists");
         }

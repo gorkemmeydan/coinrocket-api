@@ -3,18 +3,15 @@ package com.gorkemmeydan.coinrocketapi.service;
 import com.gorkemmeydan.coinrocketapi.dto.CoinTransactionDto;
 import com.gorkemmeydan.coinrocketapi.entity.AppUser;
 import com.gorkemmeydan.coinrocketapi.entity.CoinTransaction;
-import com.gorkemmeydan.coinrocketapi.exception.CoinDoesNotExistsInPortfolioException;
-import com.gorkemmeydan.coinrocketapi.exception.TransactionIdIsMissing;
-import com.gorkemmeydan.coinrocketapi.exception.UserDoesNotExistsException;
 
 import java.util.List;
 
 public interface CoinTransactionService {
-    AppUser saveTransactionToCoin(CoinTransactionDto coinTransactionDto) throws UserDoesNotExistsException, CoinDoesNotExistsInPortfolioException;
+    void saveTransactionToCoin(CoinTransactionDto coinTransactionDto);
 
-    AppUser deleteTransactionFromCoin(CoinTransactionDto coinTransactionDto) throws UserDoesNotExistsException, CoinDoesNotExistsInPortfolioException, TransactionIdIsMissing;
+    void deleteTransactionFromCoin(CoinTransactionDto coinTransactionDto);
 
-    List<CoinTransaction> getTransactionHistoryOfUserForGivenCoin(CoinTransactionDto coinTransactionDto) throws UserDoesNotExistsException, CoinDoesNotExistsInPortfolioException;
+    List<CoinTransaction> getTransactionHistoryOfUserForGivenCoin(CoinTransactionDto coinTransactionDto);
 
     boolean checkIfUserExists(String email);
 

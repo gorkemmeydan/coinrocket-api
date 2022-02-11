@@ -1,6 +1,6 @@
 package com.gorkemmeydan.coinrocketapi.exception;
 
-public class UserDoesNotExistsException extends Exception {
+public class UserDoesNotExistsException extends RuntimeException {
 
     public UserDoesNotExistsException() {
         super();

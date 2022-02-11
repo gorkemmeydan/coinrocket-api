@@ -3,16 +3,15 @@ package com.gorkemmeydan.coinrocketapi.service;
 import com.gorkemmeydan.coinrocketapi.dto.PortfolioDto;
 import com.gorkemmeydan.coinrocketapi.entity.AppUser;
 import com.gorkemmeydan.coinrocketapi.entity.Portfolio;
-import com.gorkemmeydan.coinrocketapi.exception.*;
 
 import java.util.List;
 
 public interface PortfolioService {
-    AppUser saveToPortfolio(PortfolioDto portfolioDto) throws UserDoesNotExistsException, CoinAlreadyExistsInPortfolioException;
+    void saveToPortfolio(PortfolioDto portfolioDto);
 
-    AppUser deleteFromPortfolio(PortfolioDto portfolioDto) throws UserDoesNotExistsException, CoinDoesNotExistsInPortfolioException;
+    void deleteFromPortfolio(PortfolioDto portfolioDto);
 
-    List<Portfolio> getPortfolioOfUser(String email) throws UserDoesNotExistsException;
+    List<Portfolio> getPortfolioOfUser(String email);
 
     boolean checkIfUserExists(String email);
 

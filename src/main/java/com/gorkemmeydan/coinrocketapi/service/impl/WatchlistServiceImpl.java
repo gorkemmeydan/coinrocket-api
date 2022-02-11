@@ -26,7 +26,7 @@ public class WatchlistServiceImpl implements WatchlistService {
     private final WatchlistRepository watchlistRepository;
 
     @Override
-    public AppUser saveToWatchlist(WatchlistDto watchlistDto) throws UserDoesNotExistsException, CoinAlreadyExistsInWatchlistException {
+    public void saveToWatchlist(WatchlistDto watchlistDto) {
         // find the user with given email
         if (!checkIfUserExists(watchlistDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
 
@@ -46,11 +46,10 @@ public class WatchlistServiceImpl implements WatchlistService {
 
         // refresh user to have latest watchlist
         appUserRepository.refresh(appUser);
-        return appUser;
     }
 
     @Override
-    public AppUser deleteFromWatchlist(WatchlistDto watchlistDto) throws UserDoesNotExistsException, CoinDoesNotExistsInUserException {
+    public void deleteFromWatchlist(WatchlistDto watchlistDto) {
         // find the user with given email
         if (!checkIfUserExists(watchlistDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
 
@@ -66,11 +65,10 @@ public class WatchlistServiceImpl implements WatchlistService {
 
         to_be_removed.ifPresent(watchlistRepository::delete);
 
-        return appUser;
     }
 
     @Override
-    public List<WatchList> getWatchlistOfUser(String email) throws UserDoesNotExistsException {
+    public List<WatchList> getWatchlistOfUser(String email) {
         // find the user with given email
         log.info("Getting watchlist for user {}", email);
 

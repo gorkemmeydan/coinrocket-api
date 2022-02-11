@@ -24,7 +24,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     private final PortfolioRepository portfolioRepository;
 
     @Override
-    public AppUser saveToPortfolio(PortfolioDto portfolioDto) throws UserDoesNotExistsException, CoinAlreadyExistsInPortfolioException {
+    public void saveToPortfolio(PortfolioDto portfolioDto) {
         // find the user with given email
         if (!checkIfUserExists(portfolioDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
 
@@ -44,11 +44,10 @@ public class PortfolioServiceImpl implements PortfolioService {
 
         // refresh user to have latest watchlist
         appUserRepository.refresh(appUser);
-        return appUser;
     }
 
     @Override
-    public AppUser deleteFromPortfolio(PortfolioDto portfolioDto) throws UserDoesNotExistsException, CoinDoesNotExistsInPortfolioException {
+    public void deleteFromPortfolio(PortfolioDto portfolioDto) {
         // find the user with given email
         if (!checkIfUserExists(portfolioDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
 
@@ -63,12 +62,10 @@ public class PortfolioServiceImpl implements PortfolioService {
         Optional<Portfolio> to_be_removed = appUser.getPortfolio().stream().filter(item -> item.getCoinName().equals(portfolioDto.getCoinName())).findFirst();
 
         to_be_removed.ifPresent(portfolioRepository::delete);
-
-        return appUser;
     }
 
     @Override
-    public List<Portfolio> getPortfolioOfUser(String email) throws UserDoesNotExistsException {
+    public List<Portfolio> getPortfolioOfUser(String email) {
         // find the user with given email
         log.info("Getting portfolio for user {}", email);
 
