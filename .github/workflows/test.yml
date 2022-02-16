@@ -33,7 +33,7 @@ jobs:
 
       - name: Create database
         run: |
-          psql -h postgres -U $(whoami) -c 'CREATE DATABASE coinrocketdb'
+          psql -h localhost -U $(whoami) -c 'CREATE DATABASE coinrocketdb'
 
       - name: Download repository
         uses: actions/checkout@v2
