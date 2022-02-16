@@ -86,7 +86,7 @@ class AppUserServiceImplTest {
         when(appUserRepository.findByEmail(request.getEmail())).thenReturn(mockAppUser);
 
         assertDoesNotThrow(() -> appUserService.getUserHoldings(request));
-        verify(appUserRepository, times(2)).findByEmail(request.getEmail());
+        verify(appUserRepository, times(1)).findByEmail(request.getEmail());
     }
 
     @Test
@@ -101,7 +101,7 @@ class AppUserServiceImplTest {
         UserHoldingsDto result = appUserService.getUserHoldings(request);
 
         assertEquals(mockUserHoldingsDto, result);
-        verify(appUserRepository, times(2)).findByEmail(request.getEmail());
+        verify(appUserRepository, times(1)).findByEmail(request.getEmail());
     }
 
     private AppUser generateMockAppUser(String email) {

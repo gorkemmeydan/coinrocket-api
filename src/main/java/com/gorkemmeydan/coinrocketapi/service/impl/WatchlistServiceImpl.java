@@ -27,11 +27,11 @@ public class WatchlistServiceImpl implements WatchlistService {
 
     @Override
     public void saveToWatchlist(WatchlistDto watchlistDto) {
-        // find the user with given email
-        if (!checkIfUserExists(watchlistDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
-
         // get the app user from db
         AppUser appUser = appUserRepository.findByEmail(watchlistDto.getEmail());
+
+        // find the user with given email
+        if (appUser == null) throw new UserDoesNotExistsException("User with given email does not exist");
 
         // check if coin exists in watchlist
         if (checkIfWatchlistExistsInUser(appUser, watchlistDto.getCoinName())) throw new CoinAlreadyExistsInWatchlistException("Coin already exists in watchlist for given user");
@@ -50,33 +50,31 @@ public class WatchlistServiceImpl implements WatchlistService {
 
     @Override
     public void deleteFromWatchlist(WatchlistDto watchlistDto) {
-        // find the user with given email
-        if (!checkIfUserExists(watchlistDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
-
         // get the app user from db
         AppUser appUser = appUserRepository.findByEmail(watchlistDto.getEmail());
 
-        // check if coin exists in watchlist
-        if (!checkIfWatchlistExistsInUser(appUser, watchlistDto.getCoinName())) throw new CoinDoesNotExistsInUserException("Coin does not exist in watchlist for given user");
-
-        log.info("removing coin {} from user {} ", watchlistDto.getCoinName(), watchlistDto.getEmail());
+        // find the user with given email
+        if (appUser == null) throw new UserDoesNotExistsException("User with given email does not exist");
 
         Optional<WatchList> to_be_removed = appUser.getWatchList().stream().filter(item -> item.getCoinName().equals(watchlistDto.getCoinName())).findFirst();
 
-        to_be_removed.ifPresent(watchlistRepository::delete);
+        // check if coin exists in watchlist
+        if (!to_be_removed.isPresent()) throw new CoinDoesNotExistsInUserException("Coin does not exist in watchlist for given user");
 
+        log.info("removing coin {} from user {} ", watchlistDto.getCoinName(), watchlistDto.getEmail());
+
+        to_be_removed.ifPresent(watchlistRepository::delete);
     }
 
     @Override
     public List<WatchList> getWatchlistOfUser(String email) {
-        // find the user with given email
-        log.info("Getting watchlist for user {}", email);
-
-        if (!checkIfUserExists(email)) throw new UserDoesNotExistsException("User with given email does not exist");
-
-
         // get the app user from db
         AppUser appUser = appUserRepository.findByEmail(email);
+
+        if (appUser == null) throw new UserDoesNotExistsException("User with given email does not exist");
+
+        log.info("Getting watchlist for user {}", email);
+
         return appUser.getWatchList();
     }
 

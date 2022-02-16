@@ -25,11 +25,11 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     @Override
     public void saveToPortfolio(PortfolioDto portfolioDto) {
-        // find the user with given email
-        if (!checkIfUserExists(portfolioDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
-
         // get the app user from db
         AppUser appUser = appUserRepository.findByEmail(portfolioDto.getEmail());
+
+        // find the user with given email
+        if (appUser == null) throw new UserDoesNotExistsException("User with given email does not exist");
 
         // check if coin exists in watchlist
         if (checkIfCoinExistsInPortfolio(appUser, portfolioDto.getCoinName())) throw new CoinAlreadyExistsInPortfolioException("Coin already exists in portfolio for given user");
@@ -48,31 +48,31 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     @Override
     public void deleteFromPortfolio(PortfolioDto portfolioDto) {
-        // find the user with given email
-        if (!checkIfUserExists(portfolioDto.getEmail())) throw new UserDoesNotExistsException("User with given email does not exist");
-
         // get the app user from db
         AppUser appUser = appUserRepository.findByEmail(portfolioDto.getEmail());
 
-        // check if coin exists in watchlist
-        if (!checkIfCoinExistsInPortfolio(appUser, portfolioDto.getCoinName())) throw new CoinDoesNotExistsInPortfolioException("Coin does not exist in portfolio for given user");
-
-        log.info("removing coin {} from user {} ", portfolioDto.getCoinName(), portfolioDto.getEmail());
+        // find the user with given email
+        if (appUser == null) throw new UserDoesNotExistsException("User with given email does not exist");
 
         Optional<Portfolio> to_be_removed = appUser.getPortfolio().stream().filter(item -> item.getCoinName().equals(portfolioDto.getCoinName())).findFirst();
+
+        // check if coin exists in watchlist
+        if (!to_be_removed.isPresent()) throw new CoinDoesNotExistsInPortfolioException("Coin does not exist in portfolio for given user");
+
+        log.info("removing coin {} from user {} ", portfolioDto.getCoinName(), portfolioDto.getEmail());
 
         to_be_removed.ifPresent(portfolioRepository::delete);
     }
 
     @Override
     public List<Portfolio> getPortfolioOfUser(String email) {
-        // find the user with given email
-        log.info("Getting portfolio for user {}", email);
-
-        if (!checkIfUserExists(email)) throw new UserDoesNotExistsException("User with given email does not exist");
-
         // get the app user from db
         AppUser appUser = appUserRepository.findByEmail(email);
+
+        if (appUser == null) throw new UserDoesNotExistsException("User with given email does not exist");
+
+        log.info("Getting portfolio for user {}", email);
+
         return appUser.getPortfolio();
     }
 

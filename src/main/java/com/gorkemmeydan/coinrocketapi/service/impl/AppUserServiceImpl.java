@@ -36,9 +36,8 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public void saveUser(AppUserDto appUserDto){
 
-        if(checkIfUserExists(appUserDto.getEmail())){
+        if(checkIfUserExists(appUserDto.getEmail()))
             throw new UserAlreadyExistsException("User already exists for this email");
-        }
 
         log.info("Saving new user {} to the database", appUserDto.getEmail());
 
@@ -52,29 +51,21 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public UserHoldingsDto getUserHoldings(AppUserDto appUserDto) {
-        if (!checkIfUserExists(appUserDto.getEmail())) {
-            throw new UserDoesNotExistsException("User with given email does not exists");
-        }
+        AppUser appUser = appUserRepository.findByEmail(appUserDto.getEmail());
+
+        if (appUser == null) throw new UserDoesNotExistsException("User with given email does not exists");
 
         log.info("Returning user holdings for {}", appUserDto.getEmail());
-
-        // get user from database to fill information
-        AppUser appUser = appUserRepository.findByEmail(appUserDto.getEmail());
 
         UserHoldingsDto userHoldingsDto = new UserHoldingsDto();
         userHoldingsDto.setId(appUser.getId());
         userHoldingsDto.setEmail(appUser.getEmail());
 
         // add watchlist items
-        for (WatchList item : appUser.getWatchList()) {
-            WatchListItemPojo watchListItemPojo = new WatchListItemPojo();
-            watchListItemPojo.setId(item.getId());
-            watchListItemPojo.setCoinName(item.getCoinName());
-            userHoldingsDto.getWatchList().add(watchListItemPojo);
-        }
+        for (WatchList item : appUser.getWatchList())
+            userHoldingsDto.getWatchList().add(makeWatchlistPojoFromWatchlistItem(item));
 
         // add portfolio items
-
         for (Portfolio item: appUser.getPortfolio()) {
             PortfolioItemPojo portfolioItemPojo = new PortfolioItemPojo();
             portfolioItemPojo.setId(item.getId());
@@ -87,13 +78,7 @@ public class AppUserServiceImpl implements AppUserService {
             // iterate over sorted transactions list to add to transactions and 7 days holdings
             for (CoinTransaction coinTransaction: transactionsByAscendingDate) {
                 // add transaction item
-                CoinTransactionItemPojo coinTransactionItemPojo = new CoinTransactionItemPojo();
-                coinTransactionItemPojo.setId(coinTransaction.getId());
-                coinTransactionItemPojo.setCoinName(coinTransaction.getCoinName());
-                coinTransactionItemPojo.setTransactionDate(coinTransaction.getTransactionDate());
-                coinTransactionItemPojo.setPositive(coinTransaction.isPositive());
-                coinTransactionItemPojo.setQuantity(coinTransaction.getQuantity());
-                portfolioItemPojo.getCoinTransactions().add(coinTransactionItemPojo);
+                portfolioItemPojo.getCoinTransactions().add(makeCoinTransactionItemPojoFromCoinTransactionItem(coinTransaction));
 
                 // add to 7 days transaction history array if according to date
                 // firstly get the current local date
@@ -123,5 +108,22 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public boolean checkIfUserExists(String email) {
         return appUserRepository.findByEmail(email) != null;
+    }
+
+    private WatchListItemPojo makeWatchlistPojoFromWatchlistItem(WatchList item) {
+        WatchListItemPojo watchListItemPojo = new WatchListItemPojo();
+        watchListItemPojo.setId(item.getId());
+        watchListItemPojo.setCoinName(item.getCoinName());
+        return watchListItemPojo;
+    }
+
+    private CoinTransactionItemPojo makeCoinTransactionItemPojoFromCoinTransactionItem(CoinTransaction coinTransaction) {
+        CoinTransactionItemPojo coinTransactionItemPojo = new CoinTransactionItemPojo();
+        coinTransactionItemPojo.setId(coinTransaction.getId());
+        coinTransactionItemPojo.setCoinName(coinTransaction.getCoinName());
+        coinTransactionItemPojo.setTransactionDate(coinTransaction.getTransactionDate());
+        coinTransactionItemPojo.setPositive(coinTransaction.isPositive());
+        coinTransactionItemPojo.setQuantity(coinTransaction.getQuantity());
+        return coinTransactionItemPojo;
     }
 }
