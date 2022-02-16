@@ -34,6 +34,8 @@ jobs:
       - name: Create database
         run: |
           psql -p 5433 -h localhost -U $(whoami) -W devPass -c 'CREATE DATABASE coinrocketdb'
+        env:
+          POSTGRES_PASSWORD: devPass
 
       - name: Download repository
         uses: actions/checkout@v2
