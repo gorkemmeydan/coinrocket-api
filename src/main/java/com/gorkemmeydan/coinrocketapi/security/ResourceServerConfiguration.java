@@ -39,6 +39,11 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
         http.authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll();
 
+        http.logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .permitAll();
+
         http
                 .authorizeRequests()
                 .anyRequest()
