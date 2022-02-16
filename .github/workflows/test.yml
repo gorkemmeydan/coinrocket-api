@@ -31,6 +31,9 @@ jobs:
           - 5433:5432
 
     steps:
+      - name: Install sudo package
+        run: apt update && apt install sudo
+
       - name: Install postgresql-client
         run: |
           sudo apt-get update
