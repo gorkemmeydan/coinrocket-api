@@ -33,8 +33,7 @@ jobs:
 
       - name: Create database
         run: |
-          export PGPASSWORD=devPass
-          psql -p 5433 -h localhost -U $(whoami) -c 'CREATE DATABASE coinrocketdb'
+          psql -p 5433 -h localhost -U $(whoami) -W devPass -c 'CREATE DATABASE coinrocketdb'
 
       - name: Download repository
         uses: actions/checkout@v2
