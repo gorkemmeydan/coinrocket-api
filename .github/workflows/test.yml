@@ -28,8 +28,8 @@ jobs:
     steps:
       - name: Install postgresql-client
         run: |
-          apt-get update
-          apt-get install --yes --no-install-recommends postgresql-client
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends postgresql-client
 
       - name: Create database
         run: |
