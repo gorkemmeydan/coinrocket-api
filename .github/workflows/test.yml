@@ -2,6 +2,9 @@ name: tests
 
 on: push
 
+env:
+  PGPASSWORD : 'devPass'
+
 jobs:
   first_job:
     runs-on: ubuntu-latest
@@ -33,6 +36,7 @@ jobs:
 
       - name: Create database
         run: |
+          echo "PGPASSWORD = $PGPASSWORD"
           psql -p 5433 -h localhost -U $(whoami) -W devPass -c 'CREATE DATABASE coinrocketdb'
         env:
           POSTGRES_PASSWORD: devPass
