@@ -26,11 +26,13 @@ jobs:
           - 5433:5432
 
     steps:
-      - name: Create database
-      - run: |
+      - name: Install postgresql-client
+        run: |
           apt-get update
           apt-get install --yes --no-install-recommends postgresql-client
-      - run: |
+
+      - name: Create database
+        run: |
           psql -h postgres -U postgres -c 'CREATE DATABASE coinrocketdb'
 
       - name: Download repository
