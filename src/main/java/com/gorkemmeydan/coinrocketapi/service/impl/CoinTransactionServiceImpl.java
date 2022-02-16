@@ -35,8 +35,8 @@ public class CoinTransactionServiceImpl implements CoinTransactionService {
         // get the app user from db
         AppUser appUser = appUserRepository.findByEmail(coinTransactionDto.getEmail());
 
-        // check if coin exists in watchlist
-        if (!checkIfCoinExistsInPortfolio(appUser, coinTransactionDto.getCoinName())) throw new CoinDoesNotExistsInPortfolioException("Coin already exists in portfolio for given user");
+        // check if coin exists in portfolio
+        if (!checkIfCoinExistsInPortfolio(appUser, coinTransactionDto.getCoinName())) throw new CoinDoesNotExistsInPortfolioException("Coin does not exist in portfolio for given user");
 
         // get the portfolio from the user
         Optional<Portfolio> portfolio = appUser.getPortfolio().stream().filter(item -> item.getCoinName().equals(coinTransactionDto.getCoinName())).findFirst();

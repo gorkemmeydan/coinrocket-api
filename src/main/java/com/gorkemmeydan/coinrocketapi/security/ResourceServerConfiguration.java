@@ -24,7 +24,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().antMatchers("/api/signup**").permitAll();
+        http.authorizeRequests().antMatchers("/api/user/signup**").permitAll();
 
         http.authorizeRequests().antMatchers(
                 "/v3/api-docs",

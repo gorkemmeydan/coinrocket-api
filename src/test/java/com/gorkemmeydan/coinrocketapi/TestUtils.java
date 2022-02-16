@@ -1,21 +1,27 @@
 package com.gorkemmeydan.coinrocketapi;
 
 import com.gorkemmeydan.coinrocketapi.dto.AppUserDto;
-import org.apache.commons.lang.RandomStringUtils;
+
+import java.util.Random;
 
 public class TestUtils {
     public static AppUserDto generateNewUserRequest() {
-        String email = generateRandomEmail(10);
         AppUserDto newUser = new AppUserDto();
+        String email = "test_" + randomString(10) + "@test.com";
         newUser.setEmail(email);
+        newUser.setFullName("test");
+        newUser.setPassword("testpassword");
         return newUser;
     }
 
-    public static String generateRandomEmail(int length) {
-        String allowedChars = "abcdefghijklmnopqrstuvwxyz" + "1234567890" + "_-.";
-        String email = "";
-        String temp = RandomStringUtils.random(length, allowedChars);
-        email = temp.substring(0, temp.length() - 9) + "@testdata.com";
-        return email;
+    public static String randomString(int len) {
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        Random random = new Random();
+
+        return random.ints(leftLimit, rightLimit + 1)
+                .limit(len)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }

@@ -15,8 +15,6 @@ import com.gorkemmeydan.coinrocketapi.repository.AppUserRepository;
 import com.gorkemmeydan.coinrocketapi.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -126,16 +124,4 @@ public class AppUserServiceImpl implements AppUserService {
     public boolean checkIfUserExists(String email) {
         return appUserRepository.findByEmail(email) != null;
     }
-
-
-    @Override
-    public List<AppUser> getAllUsers() {
-        return appUserRepository.findAll();
-    }
-
-    @Override
-    public Page<AppUserDto> getAllUsers(Pageable pageable) {
-        return null;
-    }
-
 }

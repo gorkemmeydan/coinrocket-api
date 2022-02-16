@@ -13,9 +13,5 @@ public interface AppUserService {
 
     boolean checkIfUserExists(String email);
 
-    List<AppUser> getAllUsers();
-
-    Page<AppUserDto> getAllUsers(Pageable pageable);
-
     UserHoldingsDto getUserHoldings(AppUserDto appUserDto);
 }

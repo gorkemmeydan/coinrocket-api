@@ -16,22 +16,16 @@ import java.net.URI;
 public class UserController {
     private final AppUserService appUserService;
 
-    @PostMapping("/signup")
+    @PostMapping("/user/signup")
     public ResponseEntity<?> saveUser(@RequestBody AppUserDto appUserDto) {
         appUserService.saveUser(appUserDto);
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/signup").toUriString());
         return ResponseEntity.created(uri).body(true);
     }
 
-    @GetMapping("/userholdings")
+    @GetMapping("/user/holdings")
     public ResponseEntity<?> getUserHoldings(@RequestBody AppUserDto appUserDto) {
         UserHoldingsDto userHoldingsDto = appUserService.getUserHoldings(appUserDto);
         return ResponseEntity.ok(userHoldingsDto);
-    }
-
-    // TODO: remove
-    @GetMapping("/getall")
-    public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.ok(appUserService.getAllUsers());
     }
 }
