@@ -1,0 +1,52 @@
+name: tests
+
+on: push
+
+jobs:
+  first_job:
+    runs-on: ubuntu-latest
+
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: devPass
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5433 on service container to the host
+          - 5433:5432
+
+    steps:
+      - name: Create database
+      - run: |
+          apt-get update
+          apt-get install --yes --no-install-recommends postgresql-client
+          - run: |
+          psql -h postgres -U postgres -c 'CREATE DATABASE coinrocketdb'
+
+      - name: Download repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Test with Maven
+        run: mvn -B test --file pom.xml
