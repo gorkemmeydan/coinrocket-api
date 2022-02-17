@@ -16,10 +16,12 @@ jobs:
       # Label used to access the service container
       postgres:
         # Docker Hub image
-        image: postgres
+        image: postgres:latest
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: devPass
+          POSTGRES_USER: postgres
+          POSTGRES_DB: coinrocketdb
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -42,7 +44,7 @@ jobs:
       - name: Create database
         run: |
           echo "PGPASSWORD = $PGPASSWORD"
-          psql -p 5433 -h localhost -U $(whoami) -W devPass -c 'CREATE DATABASE coinrocketdb'
+          PGPASSWORD=devPass psql -U postgres -tc "SELECT 'CREATE DATABASE coinrocketdb' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'coinrocketdb')"
         env:
           POSTGRES_PASSWORD: devPass
 
