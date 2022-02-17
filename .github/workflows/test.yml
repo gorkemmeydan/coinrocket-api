@@ -43,10 +43,9 @@ jobs:
 
       - name: Wait for database to be running
         run: |
-          # make file runnable, might not be necessary
-          chmod +x "${GITHUB_WORKSPACE}/.github/wait_for_postgres.sh"
-          # run script
-          "${GITHUB_WORKSPACE}/.github/wait_for_postgres.sh"
+          chmod +x ./.github/wait_for_postgres.sh
+          ./.github/wait_for_postgres.sh
+        shell: bash
 
       - name: Create database
         run: |
