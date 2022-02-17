@@ -33,6 +33,9 @@ jobs:
           - 5433:5432
 
     steps:
+      - name: Download repository
+        uses: actions/checkout@v2
+
       - name: Install sudo package
         run: apt update && apt install sudo
 
@@ -54,9 +57,6 @@ jobs:
         env:
           POSTGRES_PASSWORD: devPass
           POSTGRES_PORT: 5433
-
-      - name: Download repository
-        uses: actions/checkout@v2
 
       - name: Set up JDK 8
         uses: actions/setup-java@v1
