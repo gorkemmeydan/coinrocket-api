@@ -78,19 +78,19 @@ public class CoinTransactionServiceImpl implements CoinTransactionService {
     }
 
     @Override
-    public List<CoinTransaction> getTransactionHistoryOfUserForGivenCoin(CoinTransactionDto coinTransactionDto) {
+    public List<CoinTransaction> getTransactionHistoryOfUserForGivenCoin(String email, String coinName) {
         // get the app user from db
-        AppUser appUser = appUserRepository.findByEmail(coinTransactionDto.getEmail());
+        AppUser appUser = appUserRepository.findByEmail(email);
 
         if (appUser == null) throw new UserDoesNotExistsException("User with given email does not exist");
 
-        Optional<Portfolio> coin_portfolio = appUser.getPortfolio().stream().filter(item -> item.getCoinName().equals(coinTransactionDto.getCoinName())).findFirst();
+        Optional<Portfolio> coin_portfolio = appUser.getPortfolio().stream().filter(item -> item.getCoinName().equals(coinName)).findFirst();
 
         // check if coin exists in watchlist
         if (!coin_portfolio.isPresent()) throw new CoinDoesNotExistsInPortfolioException("Coin does not exist in portfolio for given user");
 
         // find the user with given email
-        log.info("Getting transaction history for user {} for the coin {}", coinTransactionDto.getEmail(), coinTransactionDto.getCoinName());
+        log.info("Getting transaction history for user {} for the coin {}", email, coinName);
 
         return coin_portfolio.get().getCoinTransactions();
     }

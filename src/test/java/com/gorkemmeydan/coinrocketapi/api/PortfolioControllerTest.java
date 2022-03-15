@@ -41,7 +41,7 @@ class PortfolioControllerTest  extends IntegrationTestSupport {
         this.mockMvc.perform(
                 MockMvcRequestBuilders.get(PORTFOLIO_API_ENDPOINT +"get")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(portfolioDto)))
+                        .param("email", request.getEmail()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
@@ -72,7 +72,7 @@ class PortfolioControllerTest  extends IntegrationTestSupport {
                 MockMvcRequestBuilders.get(PORTFOLIO_API_ENDPOINT +"get")
                         .header("Authorization", "Bearer 123456789")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(portfolioDto)))
+                        .param("email", request.getEmail()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))

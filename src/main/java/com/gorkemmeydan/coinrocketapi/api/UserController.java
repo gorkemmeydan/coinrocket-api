@@ -5,10 +5,12 @@ import com.gorkemmeydan.coinrocketapi.dto.UserHoldingsDto;
 import com.gorkemmeydan.coinrocketapi.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api")
@@ -24,8 +26,16 @@ public class UserController {
     }
 
     @GetMapping("/user/holdings")
-    public ResponseEntity<?> getUserHoldings(@RequestBody AppUserDto appUserDto) {
-        UserHoldingsDto userHoldingsDto = appUserService.getUserHoldings(appUserDto);
+    public ResponseEntity<?> getUserHoldings(@RequestParam String email) {
+        UserHoldingsDto userHoldingsDto = appUserService.getUserHoldings(email);
         return ResponseEntity.ok(userHoldingsDto);
+    }
+
+    @GetMapping("/user/me")
+    public ResponseEntity<?> getMe(Authentication authentication) {
+        String userName = authentication.getName();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("email", userName);
+        return ResponseEntity.ok(map);
     }
 }

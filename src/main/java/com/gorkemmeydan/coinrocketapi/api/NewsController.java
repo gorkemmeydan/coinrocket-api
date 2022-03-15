@@ -2,6 +2,7 @@ package com.gorkemmeydan.coinrocketapi.api;
 
 import com.gorkemmeydan.coinrocketapi.service.NewsService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,9 @@ public class NewsController {
     Object cachedNews;
 
     @GetMapping("/news")
-    @HystrixCommand(fallbackMethod = "getCachedNews")
+    @HystrixCommand(fallbackMethod = "getCachedNews", commandProperties = {
+        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")
+    })
     public ResponseEntity<?> getMarketData() {
         Object news = newsService.getNews();
         cachedNews = news;

@@ -1,7 +1,6 @@
 package com.gorkemmeydan.coinrocketapi.api;
 
 import com.gorkemmeydan.coinrocketapi.dto.PortfolioDto;
-import com.gorkemmeydan.coinrocketapi.entity.AppUser;
 import com.gorkemmeydan.coinrocketapi.entity.Portfolio;
 import com.gorkemmeydan.coinrocketapi.service.PortfolioService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +18,8 @@ public class PortfolioController {
     private final PortfolioService portfolioService;
 
     @GetMapping("/portfolio/get")
-    public ResponseEntity<?> getPortfolioOfUser(@RequestBody PortfolioDto portfolioDto) {
-        List<Portfolio> userPortfolio = portfolioService.getPortfolioOfUser(portfolioDto.getEmail());
+    public ResponseEntity<?> getPortfolioOfUser(@RequestParam String email) {
+        List<Portfolio> userPortfolio = portfolioService.getPortfolioOfUser(email);
         return ResponseEntity.ok(userPortfolio);
     }
 

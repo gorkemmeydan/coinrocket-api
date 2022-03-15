@@ -19,8 +19,8 @@ public class WatchlistController {
     private final WatchlistService watchlistService;
 
     @GetMapping("/watchlist/get")
-    public ResponseEntity<?> getWatchlistOfUser(@RequestBody WatchlistDto watchlistDto) {
-        List<WatchList> userWatchList = watchlistService.getWatchlistOfUser(watchlistDto.getEmail());
+    public ResponseEntity<?> getWatchlistOfUser(@RequestParam String email) {
+        List<WatchList> userWatchList = watchlistService.getWatchlistOfUser(email);
         return ResponseEntity.ok(userWatchList);
     }
 

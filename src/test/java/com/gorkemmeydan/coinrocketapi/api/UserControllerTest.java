@@ -75,7 +75,7 @@ class UserControllerTest extends IntegrationTestSupport {
         this.mockMvc.perform(
                 MockMvcRequestBuilders.get(USER_API_ENDPOINT+"holdings")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(request)))
+                        .param("email", request.getEmail()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
@@ -111,7 +111,7 @@ class UserControllerTest extends IntegrationTestSupport {
                 MockMvcRequestBuilders.get(USER_API_ENDPOINT+"holdings")
                         .header("Authorization", "Bearer 123456789")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(request)))
+                        .param("email", request.getEmail()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -130,6 +130,31 @@ class UserControllerTest extends IntegrationTestSupport {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.portfolio[0].coinTransactions[0].quantity",CoreMatchers.is(c.getQuantity())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.portfolio[0].coinTransactions[0].transactionDate",CoreMatchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.portfolio[0].coinTransactions[0].positive",CoreMatchers.is(c.isPositive())));
+    }
+
+    @Test
+    public void testGetMe_shouldNotGetIfUnauthorized() throws Exception {
+        this.mockMvc.perform(
+                MockMvcRequestBuilders.get(USER_API_ENDPOINT+"me")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockOAuth2Scope(token = "123456789",
+            username = "resource-tester",
+            scopes = "resource.read",
+            authorities = "CAN_READ")
+    public void testGetMe_whenAuth_shouldGetUsername() throws Exception {
+        this.mockMvc.perform(
+                MockMvcRequestBuilders.get(USER_API_ENDPOINT+"me")
+                        .header("Authorization", "Bearer 123456789")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is("resource-tester")));
     }
 
     private WatchList generateWatchlist(AppUser a) {

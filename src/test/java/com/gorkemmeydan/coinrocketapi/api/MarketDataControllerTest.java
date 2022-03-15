@@ -60,7 +60,7 @@ class MarketDataControllerTest extends IntegrationTestSupport {
         this.mockMvc.perform(
                 MockMvcRequestBuilders.get(MARKET_DATA_API_ENDPOINT+"searchval")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(marketDataDto)))
+                .param("searchval", marketDataDto.getSearchVal()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
@@ -79,7 +79,7 @@ class MarketDataControllerTest extends IntegrationTestSupport {
                 MockMvcRequestBuilders.get(MARKET_DATA_API_ENDPOINT+"searchval")
                         .header("Authorization", "Bearer 123456789")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(marketDataDto)))
+                        .param("searchval", marketDataDto.getSearchVal()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

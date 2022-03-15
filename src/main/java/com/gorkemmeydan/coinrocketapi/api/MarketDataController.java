@@ -1,6 +1,5 @@
 package com.gorkemmeydan.coinrocketapi.api;
 
-import com.gorkemmeydan.coinrocketapi.dto.MarketDataDto;
 import com.gorkemmeydan.coinrocketapi.service.MarketDataService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +35,9 @@ public class MarketDataController {
     }
 
     @GetMapping("/marketdata/searchval")
-    public ResponseEntity<?> getMarketBySearchVal(@RequestBody MarketDataDto marketDataDto) {
+    public ResponseEntity<?> getMarketBySearchVal(@RequestParam String searchval) {
         try {
-            Object[] coinsBySearchVal = marketDataService.getCoinsBySearchVal(marketDataDto);
+            Object[] coinsBySearchVal = marketDataService.getCoinsBySearchVal(searchval);
             return ResponseEntity.ok(coinsBySearchVal);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());

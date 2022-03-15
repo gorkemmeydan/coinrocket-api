@@ -42,7 +42,8 @@ class CoinTransactionControllerTest extends IntegrationTestSupport  {
         this.mockMvc.perform(
                 MockMvcRequestBuilders.get(COIN_TRANSACTION_API_ENDPOINT +"get")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(coinTransactionDto)))
+                        .param("email", request.getEmail())
+                        .param("coinName", coinTransactionDto.getCoinName()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
@@ -81,7 +82,8 @@ class CoinTransactionControllerTest extends IntegrationTestSupport  {
                 MockMvcRequestBuilders.get(COIN_TRANSACTION_API_ENDPOINT +"get")
                         .header("Authorization", "Bearer 123456789")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(coinTransactionDto)))
+                        .param("email", request.getEmail())
+                        .param("coinName", coinTransactionDto.getCoinName()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))

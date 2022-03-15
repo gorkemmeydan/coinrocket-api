@@ -5,7 +5,7 @@ import com.gorkemmeydan.coinrocketapi.dto.MarketDataDto;
 public interface MarketDataService {
     Object[] getTopHundredCoins();
 
-    Object[] getCoinsBySearchVal(MarketDataDto marketDataDto);
+    Object[] getCoinsBySearchVal(String searchval);
 
     Object getTrendingCoins();
 }

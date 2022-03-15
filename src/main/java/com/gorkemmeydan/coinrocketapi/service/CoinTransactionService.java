@@ -11,7 +11,7 @@ public interface CoinTransactionService {
 
     void deleteTransactionFromCoin(CoinTransactionDto coinTransactionDto);
 
-    List<CoinTransaction> getTransactionHistoryOfUserForGivenCoin(CoinTransactionDto coinTransactionDto);
+    List<CoinTransaction> getTransactionHistoryOfUserForGivenCoin(String email, String coinName);
 
     boolean checkIfUserExists(String email);
 

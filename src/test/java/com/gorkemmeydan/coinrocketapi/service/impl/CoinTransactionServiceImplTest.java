@@ -152,7 +152,7 @@ class CoinTransactionServiceImplTest {
         when(mockAppUser.getPortfolio()).thenReturn(mockPortfolioList);
         when(mockPortfolio.getCoinName()).thenReturn("bitcoin");
 
-        assertDoesNotThrow(() -> coinTransactionService.getTransactionHistoryOfUserForGivenCoin(request));
+        assertDoesNotThrow(() -> coinTransactionService.getTransactionHistoryOfUserForGivenCoin(request.getEmail(), request.getCoinName()));
     }
 
     @Test
@@ -161,7 +161,8 @@ class CoinTransactionServiceImplTest {
 
         when(appUserRepository.findByEmail(request.getEmail())).thenReturn(null);
 
-        assertThrows(UserDoesNotExistsException.class, () -> coinTransactionService.getTransactionHistoryOfUserForGivenCoin(request));
+        assertThrows(UserDoesNotExistsException.class, () -> coinTransactionService
+                .getTransactionHistoryOfUserForGivenCoin(request.getEmail(), request.getCoinName()));
         verifyNoInteractions(coinTransactionRepository);
     }
 
@@ -176,7 +177,8 @@ class CoinTransactionServiceImplTest {
         List<Portfolio> emptyList = new ArrayList<>();
         when(mockAppUser.getPortfolio()).thenReturn(emptyList);
 
-        assertThrows(CoinDoesNotExistsInPortfolioException.class, () -> coinTransactionService.getTransactionHistoryOfUserForGivenCoin(request));
+        assertThrows(CoinDoesNotExistsInPortfolioException.class, () -> coinTransactionService
+                .getTransactionHistoryOfUserForGivenCoin(request.getEmail(), request.getCoinName()));
         verifyNoInteractions(coinTransactionRepository);
     }
 

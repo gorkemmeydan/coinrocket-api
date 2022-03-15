@@ -49,7 +49,7 @@ class MarketDataServiceImplTest {
         MarketDataDto mockDto = new MarketDataDto();
         mockDto.setSearchVal("bitcoin");
 
-        Object[] result = marketDataService.getCoinsBySearchVal(mockDto);
+        Object[] result = marketDataService.getCoinsBySearchVal(mockDto.getSearchVal());
         assertEquals(result, mockObj);
     }
 

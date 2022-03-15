@@ -17,8 +17,8 @@ public class CoinTransactionController {
     private final CoinTransactionService coinTransactionService;
 
     @GetMapping("/cointransaction/get")
-    public ResponseEntity<?> getTransactionForGivenCoin(@RequestBody CoinTransactionDto coinTransactionDto) {
-        List<CoinTransaction> coinTransactions = coinTransactionService.getTransactionHistoryOfUserForGivenCoin(coinTransactionDto);
+    public ResponseEntity<?> getTransactionForGivenCoin(@RequestParam String email, @RequestParam String coinName) {
+        List<CoinTransaction> coinTransactions = coinTransactionService.getTransactionHistoryOfUserForGivenCoin(email, coinName);
         return ResponseEntity.ok(coinTransactions);
     }
 

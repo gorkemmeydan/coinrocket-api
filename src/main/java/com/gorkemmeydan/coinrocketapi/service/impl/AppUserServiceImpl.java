@@ -50,12 +50,12 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public UserHoldingsDto getUserHoldings(AppUserDto appUserDto) {
-        AppUser appUser = appUserRepository.findByEmail(appUserDto.getEmail());
+    public UserHoldingsDto getUserHoldings(String email) {
+        AppUser appUser = appUserRepository.findByEmail(email);
 
         if (appUser == null) throw new UserDoesNotExistsException("User with given email does not exists");
 
-        log.info("Returning user holdings for {}", appUserDto.getEmail());
+        log.info("Returning user holdings for {}", email);
 
         UserHoldingsDto userHoldingsDto = new UserHoldingsDto();
         userHoldingsDto.setId(appUser.getId());
